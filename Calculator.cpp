@@ -2,31 +2,74 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <string>
+#include "Calculator.h"
 
-using namespace std;
 
-int calculate(){
-    return 0;
+double calculate(std::string string_input){
+    // todo: do logic for main calculator, max 2 numbers
+    double num1 = 0.0, num2 = 0.0, result = 0.0;
+    std::string sign = "", test = "";
+    stringstream stream;
+
+    stream << string_input;
+    stream >> num1;
+    stream >> sign;
+    stream >> num2;
+
+    // testing for too many inputs
+    test = stream.str();
+    if (test != ""){
+        cout << "Error, invalid input.";
+        return 0.0;
+    }
+
+    // dont forget to write instructions for the signs
+    if (sign == "+"){
+        result = num1 + num2;
+        return result;
+    }
+    else if (sign == "-"){
+        result = num1 - num2;
+        return result;
+    }
+    else if (sign == "*"){
+        result = num1 * num2;
+        return result;
+    }
+    else if (sign == "/"){
+        result = num1 / num2;
+        return result;
+    }
+    else { // case when invalid sign
+        cout << "Invalid sign.";
+        return 0.0;
+    }
+
+    return 0.0;
 }
 
 void help(){
+    // todo: print out instructions and examples of expected inputs
 
 }
 
-string history_log(){
+std::string history_log(){
+    // todo: use a link list and print out the history. add extra option to clear if wanted.
     return "";
 }
-void calculator(){
-    string user_input="A";
+void program(){
+    std::string user_input="A";
+    double result=0;
 
-    cout << "What would you like to do next?";
+    std::cout << "What would you like to do next?";
 
 
     while (user_input != "Q"){
-        cout << "C - Calculate \nH - Help\nL - History log\nQ - Quit";
-        getline(cin, user_input);
+        std::cout << "C - Calculate \nH - Help\nL - History log\nQ - Quit";
+        std::getline(std::cin, user_input);
         if (user_input == "C"){
-            calculator();
+            result = calculate(user_input);
         }
         else if (user_input == "H"){
             help();
@@ -35,10 +78,15 @@ void calculator(){
             history_log();
         }
         else if (user_input == "Q"){
-            cout << "Ok, see you next time!";
+            std::cout << "Ok, see you next time!";
         }
         else {
-            cout << "Invalid input, try again.";
+            std::cout << "Invalid input, try again.";
         }
     }
+}
+
+int main(){
+    // run the program and create linked list
+    return 0;
 }
