@@ -1,0 +1,3 @@
+# Ignore macOS .dSYM files
+*.dSYM/
+Calculator
