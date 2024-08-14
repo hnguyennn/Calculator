@@ -8,7 +8,8 @@
 using namespace std;
 double calculate(string user_input);
 void help();
-std::string history_log();
+void update_log();
+void history_log();
 void program();
 
 
