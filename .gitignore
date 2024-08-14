@@ -1,3 +1,4 @@
 # Ignore macOS .dSYM files
 *.dSYM/
 Calculator
+.DS_Store
