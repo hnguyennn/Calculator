@@ -7,24 +7,48 @@
 
 
 
-double calculate(std::string string_input, bool boolvalue){
+double calculate(std::string string_input){
     // todo: testing
     double num1 = 0.0, num2 = 0.0, result = 0.0;
     std::string sign = "", test = "";
     stringstream stream;
 
     stream << string_input;
+
+    // default 2 numbers
     stream >> num1;
     stream >> sign;
     stream >> num2;
+    //cout << "**num1 is " << num1 << "\n and num2 is " << num2;
 
-    // testing for too many inputs
-    if (!stream.eof() || stream.fail()){
-        cout << "Error, invalid input.\n\n";
-        boolvalue = false;
-        return 0.0;
+    result = calculate_expression(num1, num2, sign);
+    //cout << "\nresult is :::" << result;
+
+    // more than 2 numbers
+    while (stream.eof() == false){
+        
+        num1 = result;
+        //Testing if expression is written correctly and also assigning values
+        if (!(stream >> sign) == true){
+            cout << "\nError: next symbol is not a sign";
+            break;
+        }
+        if (!(stream >> num2) == true){
+            cout << "\nError: next symbol is not a sign";
+            break;
+        }
+
+        //cout << "\nnum1 is " << num1 << "\n and num2 is " << num2;
+        result = calculate_expression(num1, num2, sign);
+        //cout << "\nresult: " << result << "\n";
     }
 
+    return result;
+    
+}
+
+double calculate_expression(double num1, double num2, std::string sign){
+    double result = 0.0;
     //Checking operations
     if (sign == "+"){
         result = num1 + num2;
@@ -39,16 +63,18 @@ double calculate(std::string string_input, bool boolvalue){
         return result;
     }
     else if (sign == "/"){
+        if (num2 == 0){
+            cout << "\nNumbers cannot be divided by 0";
+        }
+        else {
         result = num1 / num2;
+        }
         return result;
     }
     else { // case when invalid sign
-        cout << "Invalid sign.\n\n";
-        boolvalue = false;
+        cout << "Error: Invalid sign.\n\n";
         return 0.0;
     }
-
-    return 0.0;
 }
 
 void help(){
@@ -64,9 +90,9 @@ void help(){
         << "Example: '2 + 4' is a valid argument, but '9 0 / 1' and '8 minus 9' are not.\n\n"
         << "Valid operations: \n"
         << "'+' : Addition\n'-' : Subtraction\n'*' : Multiplication\n'/' : Division\n\n"
-        << "Limitations:\nCan only perform simple functions (addition, subtraction, multiplication, division\n)"
-        << "Can only perform arithmetic on two numbers max.\n"
-        << "Does not support parentheses or PEMDAS\n\n"
+        << "Limitations:\n-> Can only perform simple functions (addition, subtraction, multiplication, division)\n"
+        << "-> Expression is evaluated from left to right.\n"
+        << "-> Does not support parentheses or PEMDAS\n\n"
         << "----------------\n\n"
         << "Returning to homescreen now.\n\n";
     }
@@ -93,8 +119,13 @@ void help(){
 void update_log(){
     std::cout << "----------------\n\n"
     << "Update Log:\n"
-    << "No updates as of now, still in development. Will give general updates here,"
-    << " but detailed updates can be found on https://github.com/hnguyennn/Calculator \n\n"
+    << "9/2/2024\n"
+    << "-----\n"
+    << "-> 'Calculate' can now handle more than 2 numbers at a time.\n"
+    << "-> Logic is updated and covers more wrong cases, including division by zero.\n"
+    << "-> The 'Calculate' section under 'Help' has also been updated.\n"
+    <<"-----\n"
+    << "\nMore detailed updates can be found on https://github.com/hnguyennn/Calculator \n"
     << "----------------\n\n"
     << "Returning to homescreen now.\n\n";
 }
@@ -105,7 +136,6 @@ void history_log(){
 }
 void program(){
     std::string user_input="A", expression_input;
-    bool boolexpression=true;
     double result=0;
 
     while (user_input != "Q" && user_input != "q"){
@@ -114,16 +144,13 @@ void program(){
         std::getline(std::cin, user_input);
 
         if (user_input == "C" || user_input == "c"){
-            boolexpression = true; //currently not working
+            // todo: get the most recent answer
             std::cout << "Please enter a valid expression: ";
             std::getline(std::cin, expression_input);
-            result = calculate(expression_input,boolexpression);
-            if (boolexpression == true){
-                std::cout << expression_input << " = " << result << "\n\n";
-            }
+            result = calculate(expression_input);
+            std::cout << expression_input << " = " << result << "\n\n";
+            
             //save to history log
-
-    
         }
 
         else if (user_input == "H" || user_input =="h"){
@@ -149,7 +176,7 @@ void program(){
 }
 
 int main(){
-    // run the program and create linked list
+    // run the program and create linked list for the history log
     program();
     return 0;
 }
