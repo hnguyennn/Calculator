@@ -131,7 +131,7 @@ void update_log(){
 }
 
 void history_log(){
-    //todo: use a link list and print out the history. add extra option to clear if wanted.
+    // todo: use a link list and print out the history. add extra option to clear if wanted.
     std::cout << "Still in development. \n\n";
 }
 void program(){
