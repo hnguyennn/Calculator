@@ -4,10 +4,18 @@
 
 History_Log::History_Log(){
 // Constructor. Creates and initializes the history log.
+    _head = new Node("_SENTINEL_");
+    _tail = _head;
+    _head->next = nullptr;
+    _prev_to_current = _head;
+    
 }
 
 History_Log::~History_Log(){
 // Destructor, uses clear() and then deletes the head. Completely erases the history log.
+    clear();
+    delete _head;
+    
 }
 
 History_Log* History_Log::insert_into_memory(std::string expression){
