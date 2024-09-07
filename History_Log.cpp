@@ -25,7 +25,7 @@ History_Log* History_Log::insert_into_memory(std::string expression){
 
 size_t History_Log::get_size(){
 // Gets the total number of nodes (expressions) that the history log currently holds. Will cap around a certain amount.
-    return 0;
+    return _size;
 }
 
 void History_Log::clear(){
