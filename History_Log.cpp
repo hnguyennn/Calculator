@@ -1,5 +1,6 @@
 // History_Log.cpp
 #include "Calculator.h"
+#include <iostream>
 
 
 History_Log::History_Log(){
@@ -20,7 +21,29 @@ History_Log::~History_Log(){
 
 History_Log* History_Log::insert_into_memory(std::string expression){
 // Creates a new node for the expressoin and adds the new expression at the end of the linked list (tail). 
-// Returns a pointer to this new node. If it hits the max amount of nodes (expressions), output an error message.
+// Returns a pointer to this new node. If it hits the max amount of nodes (expressions), 
+// output an error message before the user can input anymore expressions in Calculator.cpp.
+// '_prev_to_current' in this context, is the node before the tail
+
+    Node* new_node = new Node(expression); // turn the expression into a new node
+
+    new_node->next = _prev_to_current->next; //new node points to current
+    _prev_to_current->next = new_node; // previous points to new node
+    _tail = new_node; // new_node is automatically the tail now
+
+    _size += 1;
+
+    // advance _prev_to_current to the next node.
+    // if only one node currently exists, _prev_to_current should just stay at _head.
+    if (_size > 1){
+        _prev_to_current = _prev_to_current->next;
+    }
+
+    // Output a warning message if the maximum capacity is reached.
+    if (_size == 20){
+        std::cout << "Warning: Maximum capacity reached. Head to 'History Log' to manage storage.";
+    }
+    return this;
 }
 
 size_t History_Log::get_size(){
