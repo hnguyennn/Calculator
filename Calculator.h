@@ -4,15 +4,6 @@
 #define Calculator_h
 #include <string>
 
-//Calculator.cpp
-using namespace std;
-double calculate(string user_input);
-double calculate_expression(double num1, double num2, std::string sign);
-void help();
-void update_log();
-void history_log();
-void program();
-
 //History_Log.cpp
 class History_Log {
 private:
@@ -31,5 +22,16 @@ public:
     void clear();
     std::string print_memory();
 };
+
+//Calculator.cpp
+using namespace std;
+double calculate(string user_input);
+double calculate_expression(double num1, double num2, std::string sign);
+void help();
+void update_log();
+void history_log(History_Log& memory_log);
+void program(History_Log& memory_log);
+
+
 
 #endif /* Calculator_h */
