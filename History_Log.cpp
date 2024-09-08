@@ -1,6 +1,7 @@
 // History_Log.cpp
 #include "Calculator.h"
 #include <iostream>
+#include <sstream>
 
 
 History_Log::History_Log(){
@@ -43,6 +44,8 @@ History_Log* History_Log::insert_into_memory(std::string expression){
     if (_size == 20){
         std::cout << "Warning: Maximum capacity reached. Head to 'History Log' to manage storage.";
     }
+
+    _prev_to_current = _head;
     return this;
 }
 
@@ -63,12 +66,12 @@ void History_Log::clear(){
 
     _prev_to_current = _head; // reset _prev_to_current so _current is on the first node
 
-    Node *current = _prev_to_current->next, *after;
+    Node *_current = _prev_to_current->next, *after;
 
     for (size_t i = 1; i <= _size; i++){
-        after = current->next;
-        delete current;
-        current = after;
+        after = _current->next;
+        delete _current;
+        _current = after;
         
     }
     // Reset all pointers to _head
@@ -78,7 +81,22 @@ void History_Log::clear(){
     _size = 0;
 }
 
-void History_Log::print_memory(){
+std::string History_Log::print_memory(){
 // Outputs all expressions, starting from oldest (head) to newest (tail).
+    std::stringstream stream;
+    std::string stream_string;
+    size_t counter = 1;
+    Node *_current = _prev_to_current->next;
+
+    stream << "# " << "         Expression\n"
+    << "------------------------------\n";
+    while (_current != nullptr){
+        stream << counter << "          " << _current->data << "\n";
+        _current = _current->next;
+        counter += 1;
+    }
+
+    stream_string = stream.str();
+    return stream_string;
 }
 
