@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "Calculator.h"
+#include "History_Log.cpp"
 
 
 
@@ -130,13 +131,33 @@ void update_log(){
     << "Returning to homescreen now.\n\n";
 }
 
-void history_log(){
+void history_log(History_Log& memory_log){
     // todo: use a link list and print out the history. add extra option to clear if wanted.
-    std::cout << "Still in development. \n\n";
+    std::string user_input="A", view_memory_string = "";
+    std::cout << "How would you like to manage the calculator's memory?\n";
+    std::cout << "V - View Memory\nC - Clear Memory\nB - Back to homescreen\n\n";
+    std::getline(std::cin, user_input);
+
+    if (user_input == "V" || user_input == "v"){
+        view_memory_string = memory_log.print_memory();
+        std::cout << view_memory_string << "\n\nPress Enter to continue.";
+
+        std::string temp;
+        std::getline(std::cin, temp);
+
+    }
+    else if (user_input == "C" || user_input == "c"){
+        //insert instructions to clearing memory
+    }
+    else if (user_input == "B" || user_input == "b"){
+        std::cout << "Returning to homescreen now.\n\n";
+    }
+
 }
-void program(){
-    std::string user_input="A", expression_input;
+void program(History_Log& memory_log){
+    std::string user_input="A", expression_input, expression_string, result_string;
     double result=0;
+    size_t memory_size = 0;
 
     while (user_input != "Q" && user_input != "q"){
         std::cout << "What would you like to do next?\n";
@@ -145,12 +166,22 @@ void program(){
 
         if (user_input == "C" || user_input == "c"){
             // todo: get the most recent answer
-            std::cout << "Please enter a valid expression: ";
-            std::getline(std::cin, expression_input);
-            result = calculate(expression_input);
-            std::cout << expression_input << " = " << result << "\n\n";
-            
-            //save to history log
+            //       fix error with the history log saving incorrect inputs
+            if (memory_log.get_size() < 20){
+                std::cout << "Please enter a valid expression: ";
+                std::getline(std::cin, expression_input);
+                result = calculate(expression_input);
+                result_string = to_string(result);
+                expression_string = expression_input + " = " + result_string;
+
+                std::cout << expression_input << " = " << result << "\n\n"
+                << "Attempting to save to memory...\n";
+                memory_log.insert_into_memory(expression_string);
+                std::cout << "Saved to memory successfully! Returning to homescreen now.\n\n"; 
+            }
+            else if (memory_log.get_size() == 20){
+                std::cout << "Warning: Maximum capacity reached. Head to 'History Log' to manage storage.\n\n";
+            }
         }
 
         else if (user_input == "H" || user_input =="h"){
@@ -158,7 +189,7 @@ void program(){
         }
 
         else if (user_input == "L" || user_input == "l"){
-            history_log();
+            history_log(memory_log);
         }
 
         else if (user_input == "U" || user_input == "u"){
@@ -177,6 +208,7 @@ void program(){
 
 int main(){
     // run the program and create linked list for the history log
-    program();
+    History_Log memory_history;
+    program(memory_history);
     return 0;
 }
