@@ -29,7 +29,7 @@ public:
     History_Log *insert_into_memory(std::string expression);
     size_t get_size();
     void clear();
-    void print_memory();
+    std::string print_memory();
 };
 
 #endif /* Calculator_h */
