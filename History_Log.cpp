@@ -53,6 +53,29 @@ size_t History_Log::get_size(){
 
 void History_Log::clear(){
 // Resets the history log to 0 nodes (expressions).
+// '_prev_to_current' will be the node before '_current', where '_current' is the node being deleted.
+
+    // Empty Memory
+    if (_size == 0){
+        std::cout << "Error: Memory is already empty.";
+        return;
+    }
+
+    _prev_to_current = _head; // reset _prev_to_current so _current is on the first node
+
+    Node *current = _prev_to_current->next, *after;
+
+    for (size_t i = 1; i <= _size; i++){
+        after = current->next;
+        delete current;
+        current = after;
+        
+    }
+    // Reset all pointers to _head
+    _tail = _head;
+    _prev_to_current = _head;
+    _head->next = nullptr;
+    _size = 0;
 }
 
 void History_Log::print_memory(){
