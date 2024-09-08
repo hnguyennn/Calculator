@@ -24,28 +24,25 @@ History_Log* History_Log::insert_into_memory(std::string expression){
 // Creates a new node for the expressoin and adds the new expression at the end of the linked list (tail). 
 // Returns a pointer to this new node. If it hits the max amount of nodes (expressions), 
 // output an error message before the user can input anymore expressions in Calculator.cpp.
-// '_prev_to_current' in this context, is the node before the tail
+// _prev_to_current is not used here.
+
 
     Node* new_node = new Node(expression); // turn the expression into a new node
 
-    new_node->next = _prev_to_current->next; //new node points to current
-    _prev_to_current->next = new_node; // previous points to new node
-    _tail = new_node; // new_node is automatically the tail now
-
-    _size += 1;
-
-    // advance _prev_to_current to the next node.
-    // if only one node currently exists, _prev_to_current should just stay at _head.
-    if (_size > 1){
-        _prev_to_current = _prev_to_current->next;
+    if (_size == 0){
+        _head->next = new_node;
     }
+    else{
+        _tail->next = new_node; // new_node is automatically the tail now
+    }
+    _tail = new_node;
+    _size += 1;
 
     // Output a warning message if the maximum capacity is reached.
     if (_size == 20){
         std::cout << "Warning: Maximum capacity reached. Head to 'History Log' to manage storage.";
     }
 
-    _prev_to_current = _head;
     return this;
 }
 
@@ -86,7 +83,7 @@ std::string History_Log::print_memory(){
     std::stringstream stream;
     std::string stream_string;
     size_t counter = 1;
-    Node *_current = _prev_to_current->next;
+    Node *_current = _head->next;
 
     stream << "# " << "         Expression\n"
     << "------------------------------\n";
