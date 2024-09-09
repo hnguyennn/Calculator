@@ -101,8 +101,12 @@ double History_Log::get_previous_answer_memory(){
 // Finds and returns the most recent answer from the expression inputted by the user.
     std::string expression = _tail->data, character;
     std::stringstream stream;
-    double previous_answer;
+    double previous_answer = 0.0;
 
+    // If there are currently no expressions saved to memory:
+    if (_size == 0){
+        return previous_answer;
+    }
     // The expression should be the most recent one (at the tail of this linked list).
     stream << expression;
 
