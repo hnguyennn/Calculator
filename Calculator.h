@@ -21,6 +21,7 @@ public:
     size_t get_size();
     void clear();
     std::string print_memory();
+    double get_previous_answer_memory();
 };
 
 //Calculator.cpp
