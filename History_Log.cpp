@@ -97,3 +97,21 @@ std::string History_Log::print_memory(){
     return stream_string;
 }
 
+double History_Log::get_previous_answer_memory(){
+// Finds and returns the most recent answer from the expression inputted by the user.
+    std::string expression = _tail->data, character;
+    std::stringstream stream;
+    double previous_answer;
+
+    // The expression should be the most recent one (at the tail of this linked list).
+    stream << expression;
+
+    // Attempting to find the "=" sign. The answer of this expression should be directly after this sign.
+    while (stream >> character){
+        if (character == "="){
+            stream >> previous_answer;
+            return previous_answer;
+        }
+    }
+}
+
