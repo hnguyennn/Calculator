@@ -106,8 +106,13 @@ void help(){
     else if (user_input == "L" || user_input == "l"){
         std::cout << "----------------\n\n"
         <<"A history of all previous calculations."
-        << "This will print out all previous calculations oldest to newest."
-        << " There is also an option to clear the history.\n\n"
+        << "This will print out all previous calculations oldest to newest. "
+        << "There will also be an option to clear the history.\n\n"
+        << "To use the 'Previous Answer Memory' function, when typing in your expression, represent your "
+        << "previous answer value with the words 'Ans' or 'ans'. Only these two variations of the word work. "
+        << "If the history log is currently empty, previous answer memory's value will be 0.\n"
+        << "Ex: If the 'previous answer memory' value is 10, and the expression inputted is '25 + Ans', "
+        << "then, the result will be 35.\n\n"
         << "----------------\n\n"
         << "Returning to homescreen now.\n\n";
     }
@@ -142,7 +147,7 @@ void history_log(History_Log& memory_log){
     // todo: use a link list and print out the history. add extra option to clear if wanted.
     std::string user_input="A", view_memory_string = "";
     std::cout << "How would you like to manage the calculator's memory?\n";
-    std::cout << "V - View Memory\nC - Clear Memory\nB - Back to homescreen\n\n";
+    std::cout << "V - View Memory\nP - Previous Answer Memory\nC - Clear Memory\nB - Back to homescreen\n\n";
     std::getline(std::cin, user_input);
 
     if (user_input == "V" || user_input == "v"){
@@ -152,6 +157,15 @@ void history_log(History_Log& memory_log){
         std::string temp;
         std::getline(std::cin, temp);
 
+    }
+    else if (user_input == "P" || user_input == "p"){
+        double ans = memory_log.get_previous_answer_memory();
+        std::cout << "Your most recent answer is " << ans << ".\n"
+        << "Refer to the 'History Log' section under 'Help' to see how to use it."
+        << view_memory_string << "\n\nPress Enter to continue.";
+
+        std::string temp;
+        std::getline(std::cin, temp);
     }
     else if (user_input == "C" || user_input == "c"){
         //insert instructions to clearing memory
