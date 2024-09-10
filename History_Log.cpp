@@ -11,12 +11,13 @@ History_Log::History_Log(){
     _head->next = nullptr;
     _prev_to_current = _head;
     _size = 0;
+    exit = true;
     
 }
 
 History_Log::~History_Log(){
 // Destructor, uses clear() and then deletes the head. Completely erases the history log.
-    clear();
+    clear(1, _size, exit);
     delete _head;
     
 }
@@ -52,31 +53,43 @@ size_t History_Log::get_size(){
     return _size;
 }
 
-void History_Log::clear(){
+void History_Log::clear(size_t start, size_t end, bool& exit){
 // Resets the history log to 0 nodes (expressions).
 // '_prev_to_current' will be the node before '_current', where '_current' is the node being deleted.
 
     // Empty Memory
-    if (_size == 0){
-        std::cout << "Error: Memory is already empty.";
+    if (_size == 0 && exit == false){
+        std::cout << "Error: Memory is already empty.\n\n";
         return;
     }
 
     _prev_to_current = _head; // reset _prev_to_current so _current is on the first node
 
-    Node *_current = _prev_to_current->next, *after;
+    Node *_current = _prev_to_current->next, *_marker = _head, *after;
 
-    for (size_t i = 1; i <= _size; i++){
+    // Advance _marker to be the node before the start position.
+    for (size_t i = 1; i < start; i++){
+        _marker = _current;
+        _current = _current->next;  
+    }
+
+    // At the start position, delete all nodes until the end position (inclusive).
+    for (size_t j = start; j <= end; j++){
         after = _current->next;
         delete _current;
         _current = after;
+        _size -= 1;
         
     }
-    // Reset all pointers to _head
+
+    // Reset pointers to correct spots
     _tail = _head;
-    _prev_to_current = _head;
-    _head->next = nullptr;
-    _size = 0;
+    _marker->next = _current; // Reattach the list together if the section removed was in the middle.
+    for (size_t k = 1; k <= _size; k++){ // Fix _tail's spot if the section removed was in the middle.
+        _tail = _tail->next;
+    }
+    _prev_to_current = _head; // Reset for future use
+    
 }
 
 std::string History_Log::print_memory(){
