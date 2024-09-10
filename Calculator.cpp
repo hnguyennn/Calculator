@@ -3,50 +3,51 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <algorithm>
 #include "Calculator.h"
 #include "History_Log.cpp"
 
 
 
-double calculate(std::string string_input){
-    // todo: testing
-    double num1 = 0.0, num2 = 0.0, result = 0.0;
-    std::string sign = "", test = "";
+double calculate(std::string string_input, History_Log& memory_log){
+    // todo: testing, fix logic to include 'ans', fix error where if only 1 num, num1 = 0
+    double num1 = 0.0, num2 = 0.0, result = 0.0, previous_answer_memory = memory_log.get_previous_answer_memory();
+    std::string sign = "+", test = "", stringNum;
+    bool success = true;
     stringstream stream;
 
     stream << string_input;
 
-    // default 2 numbers
-    stream >> num1;
-    stream >> sign;
-    stream >> num2;
+    // Check the first number if its a digit or 'Ans'
+    stream >> stringNum;
+    //cout << "First attempt to saving number: " <<  stringNum << "\n\n";
+    num1 = convert_to_digits(stringNum, previous_answer_memory, success);
+    if (success == false){ // Not a valid number
+        std::cout << "Error: Invalid input, check 'Help' for the proper format.\n\n";
+        return 0.0; //find a way to cancel
+    }
     //cout << "**num1 is " << num1 << "\n and num2 is " << num2;
 
-    result = calculate_expression(num1, num2, sign);
-    //cout << "\nresult is :::" << result;
-
-    // more than 2 numbers
-    while (stream.eof() == false){
-        
-        num1 = result;
-        //Testing if expression is written correctly and also assigning values
-        if (!(stream >> sign) == true){
-            cout << "\nError: next symbol is not a sign";
-            break;
-        }
-        if (!(stream >> num2) == true){
-            cout << "\nError: next symbol is not a sign";
-            break;
+    while (stream >> sign){
+        stream >> stringNum; // Check if next input is a number
+        num2 = convert_to_digits(stringNum, previous_answer_memory, success);
+        //cout << "\nnum2 is " << num2 << "\n\n";
+        if (success == false){
+            std::cout << "Error: Invalid input, check 'Help' for the proper format.\n\n";
+            return 0.0; //find a way to cancel
         }
 
-        //cout << "\nnum1 is " << num1 << "\n and num2 is " << num2;
+        // Calculate
         result = calculate_expression(num1, num2, sign);
-        //cout << "\nresult: " << result << "\n";
+        //cout << "result is: " << result << "\n\n";
+        num1 = result;
+        //cout << "num1 is" << num1 << "\n\n";  
     }
-
-    return result;
+    //cout << "returning num1: " << num1 << "\n\n";
+    return num1;
     
 }
+
 
 double calculate_expression(double num1, double num2, std::string sign){
     double result = 0.0;
@@ -78,6 +79,23 @@ double calculate_expression(double num1, double num2, std::string sign){
     }
 }
 
+double convert_to_digits(std::string string_num, double previous_answer_memory, bool& success){
+// Check if it is digits or 'ans' and if it is, return appropriate value. if not, assign success = false and return.
+    if (!((all_of(string_num.begin(), string_num.end(), ::isdigit)) || string_num == "Ans" || string_num == "ans")){
+        success = false;
+        return 0.0;
+    }
+    else { // Valid input
+        if ((all_of(string_num.begin(), string_num.end(), ::isdigit))){ //stringNum is a double value
+            success = true;
+            return std::stod(string_num);
+        }
+        else if (string_num == "Ans" || string_num == "ans"){ //stringNum is trying to access previous answer memory
+            success = true;
+            return previous_answer_memory;
+        }
+    }
+}
 void help(){
     std::string user_input;
     std::cout << "What would you like help on?\n" << "C - Calculator\nU - Update Log\nL - History Log\n";
@@ -191,10 +209,11 @@ void program(History_Log& memory_log){
             if (memory_log.get_size() < 20){
                 std::cout << "Please enter a valid expression: ";
                 std::getline(std::cin, expression_input);
-                result = calculate(expression_input);
+                result = calculate(expression_input, memory_log);
                 result_string = to_string(result);
                 expression_string = expression_input + " = " + result_string;
 
+                // Fix error with saving incorrect inputs
                 std::cout << expression_input << " = " << result << "\n\n"
                 << "Attempting to save to memory...\n";
                 memory_log.insert_into_memory(expression_string);
