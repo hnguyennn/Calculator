@@ -131,6 +131,12 @@ void help(){
         << "If the history log is currently empty, previous answer memory's value will be 0.\n"
         << "Ex: If the 'previous answer memory' value is 10, and the expression inputted is '25 + Ans', "
         << "then, the result will be 35.\n\n"
+        << "To use the 'Clear' function, you have a choice of either clearing all or clearing a select few. "
+        << "Clearing all simply deletes all expressions saved and 'previous answer memory' will also be wiped as well. "
+        << "Clearing only a select few works by giving the program an inclusive interval in the format: 'start - end'. "
+        << "The start and end positions must be valid indexes (ex: end cannot be greater than start and both cannot be out of bounds).\n"
+        << "Ex: If you currently have 15 entries and would like to remove entries 2 to 6 inclusive, when prompted by the program, enter: '2 - 6'. "
+        << "The format must match exactly in order for the program to correctly read it.\n\n"
         << "----------------\n\n"
         << "Returning to homescreen now.\n\n";
     }
@@ -172,39 +178,111 @@ void update_log(){
     std::getline(std::cin, temp);
 }
 
-void history_log(History_Log& memory_log){
-    // todo: use a link list and print out the history. add extra option to clear if wanted.
-    std::string user_input="A", view_memory_string = "";
-    std::cout << "How would you like to manage the calculator's memory?\n";
-    std::cout << "V - View Memory\nP - Previous Answer Memory\nC - Clear Memory\nB - Back to homescreen\n\n";
-    std::getline(std::cin, user_input);
+void history_log(History_Log& memory_log, bool& exit){
+    // todo: move to another file.
+    std::string user_input="A", view_memory_string = "", user_input_clear;
 
-    if (user_input == "V" || user_input == "v"){
-        view_memory_string = memory_log.print_memory();
-        std::cout << view_memory_string << "\n\nPress Enter to continue.";
+    while ((user_input != "b") && (user_input != "B")){
+        std::cout << "How would you like to manage the calculator's memory?\n";
+        std::cout << "V - View Memory\nP - Previous Answer Memory\nC - Clear Memory\nB - Back to homescreen\n\n";
+        std::getline(std::cin, user_input);
+        if (user_input == "V" || user_input == "v"){
+            view_memory_string = memory_log.print_memory();
+            std::cout << view_memory_string << "\n\nPress Enter to continue.";
 
-        std::string temp;
-        std::getline(std::cin, temp);
+            std::string temp;
+            std::getline(std::cin, temp);
+            
 
+        }
+        else if (user_input == "P" || user_input == "p"){
+            double ans = memory_log.get_previous_answer_memory();
+
+            std::cout << "Your most recent answer is " << ans << ".\n"
+            << "Refer to the 'History Log' section under 'Help' to see how to use it."
+            << "\n\nPress Enter to continue.";
+
+            std::string temp;
+            std::getline(std::cin, temp);
+        }
+        else if (user_input == "C" || user_input == "c"){
+            //insert instructions to clearing memory
+            size_t num_entries = memory_log.get_size();
+
+            std::cout << "Your history log currently contains " << num_entries << " entries. Would you like to delete all or a selected amount?\n";
+            std::cout << "A - Delete All\nS - Select Amount\nC - Cancel\n\n";
+            std::getline(std::cin, user_input_clear);
+
+            if (user_input_clear == "A" || user_input_clear == "a"){
+                std::cout << "Attempting to clear all memory now.\n";
+                memory_log.clear(1, num_entries, exit);
+                if (memory_log.get_size() > 0){
+                    std::cout << "Memory cleared successfully! Returning to homescreen now.\n\n"; // fix this line
+                    
+                }
+                return;
+            }
+
+            else if (user_input_clear == "S" || user_input_clear == "s"){
+                //fix clear to accept different values
+                std::string user_input_positions = "";
+                size_t start = 0, end = 0, num_entries = memory_log.get_size();
+                char test;
+                stringstream stream;
+
+                std::cout << "Would you like to view your history log first?\n";
+                std::cout << "Y - Yes\nN - No\n\n";
+                std::getline(std::cin, user_input_clear);
+
+                if (user_input_clear == "Y" || user_input_clear == "y"){ // If the user wants to view beforehand
+                    view_memory_string = memory_log.print_memory();
+                    std::cout << view_memory_string << "\n\n";
+                }
+
+                std::cout << "Enter a valid starting and ending position, separated by a dash ('-'). The positions are inclusive: ";
+                std::getline(std::cin, user_input_positions);
+                
+                // Assigning the variables
+                stream << user_input_positions;
+                stream >> start;
+                if (start == 0 || start > num_entries){
+                    std::cout << "Invalid start position, please recheck and try again.\n\n";
+                    return;
+                }
+                stream >> test;
+                if (test != '-'){
+                    std::cout << "Invalid format, please recheck and try again.\n\n";
+                    return;
+                }
+                stream >> end;
+                if (end < start || end > num_entries){
+                    std::cout << "Invalid end position, please recheck and try again.\n\n";
+                    return;
+                }
+                std::cout << "Attempting to clear selected memory now.\n";
+                memory_log.clear(start, end, exit);
+                return;
+            }
+
+            else if (user_input_clear == "C" || user_input_clear == "c"){
+                std::cout << "Returning to homescreen now.\n\n";
+                return;
+            }
+
+            else {
+                std::cout << "Invalid input.";
+            }
+            
+        }
+        else if (user_input == "B" || user_input == "b"){
+            std::cout << "Returning to homescreen now.\n\n";
+        }
+        else {
+            std::cout << "Invalid input, try again.\n\n";
+        }
     }
-    else if (user_input == "P" || user_input == "p"){
-        double ans = memory_log.get_previous_answer_memory();
-        std::cout << "Your most recent answer is " << ans << ".\n"
-        << "Refer to the 'History Log' section under 'Help' to see how to use it."
-        << view_memory_string << "\n\nPress Enter to continue.";
-
-        std::string temp;
-        std::getline(std::cin, temp);
-    }
-    else if (user_input == "C" || user_input == "c"){
-        //insert instructions to clearing memory
-    }
-    else if (user_input == "B" || user_input == "b"){
-        std::cout << "Returning to homescreen now.\n\n";
-    }
-
 }
-void program(History_Log& memory_log){
+void program(History_Log& memory_log, bool& exit){
     std::string user_input="A", expression_input, expression_string, result_string;
     double result=0;
     size_t memory_size = 0;
@@ -240,7 +318,7 @@ void program(History_Log& memory_log){
         }
 
         else if (user_input == "L" || user_input == "l"){
-            history_log(memory_log);
+            history_log(memory_log, exit);
         }
 
         else if (user_input == "U" || user_input == "u"){
@@ -249,6 +327,8 @@ void program(History_Log& memory_log){
 
         else if (user_input == "Q" || user_input == "q"){
             std::cout << "Ok, see you next time!\n\n";
+            exit = true;
+            return;
         }
 
         else {
@@ -260,6 +340,7 @@ void program(History_Log& memory_log){
 int main(){
     // run the program and create linked list for the history log
     History_Log memory_history;
-    program(memory_history);
+    bool exit = false;
+    program(memory_history, exit);
     return 0;
 }
