@@ -142,23 +142,34 @@ void help(){
 
 void update_log(){
     std::cout << "----------------\n\n"
-    << "Update Log:\n"
+    << "Update Log\n"
+    << "~~~~~~~~~~~\n\n"
     << "9/2/2024\n"
     << "-----\n"
     << "-> 'Calculate' can now handle more than 2 numbers at a time.\n"
     << "-> Logic is updated and covers more wrong cases, including division by zero.\n"
     << "-> The 'Calculate' section under 'Help' has also been updated.\n"
-    << "-----\n"
+    << "-----\n\n"
     << "9/8/2024\n"
     << "-----\n"
-    << "-> 'History log' feature has been added. This feature serves to hold memory of 20 expressions maximum. "
+    << "-> 'History Log' feature has been added. This feature serves to hold memory of 20 expressions maximum. "
     << "It can currently only allow the user to view the memory, from oldest to newest, and will have a 'clear' feature in the future.\n"
     << "-> 'Calculate' has been updated to save the inputted expression to the history log. There is a known error where it will attempt"
-    << " to save the expression, even if it is an invalid one. Will be fixed in the future."
+    << " to save the expression, even if it is an invalid one. Will be fixed in the future.\n"
+    << "-----\n\n"
+    << "9/9/2024\n"
+    << "-----\n"
+    << "-> 'Previous Answer Memory' feature has been added. Users are able to use the previous answer in their new expression. "
+    << "The 'History Log' section under 'Help' has been updated to reflect this change and give instructions on how to use this feature.\n"
+    << "-> Valid expressions can now just contain one number only. Ex: '25' is a valid expression. Previously, it would be marked incorrect and "
+    << "would show up as '25 = 0' in the history log.\n"
     << "-----\n"
     << "\nMore detailed updates can be found on https://github.com/hnguyennn/Calculator \n"
     << "----------------\n\n"
-    << "Returning to homescreen now.\n\n";
+    << "Press Enter to return to homescreen.\n\n";
+
+    std::string temp;
+    std::getline(std::cin, temp);
 }
 
 void history_log(History_Log& memory_log){
