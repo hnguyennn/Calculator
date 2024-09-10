@@ -10,6 +10,7 @@ History_Log::History_Log(){
     _tail = _head;
     _head->next = nullptr;
     _prev_to_current = _head;
+    _size = 0;
     
 }
 
