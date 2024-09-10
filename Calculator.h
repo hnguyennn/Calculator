@@ -13,7 +13,7 @@ private:
         Node(std::string s = "") : data(s), next(nullptr) {}
     };
     Node *_head, *_tail, *_prev_to_current;
-    size_t _size = 0;
+    size_t _size;
 public:
     History_Log();
     ~History_Log();
@@ -26,8 +26,9 @@ public:
 
 //Calculator.cpp
 using namespace std;
-double calculate(string user_input);
+double calculate(string user_input, History_Log& memory_log);
 double calculate_expression(double num1, double num2, std::string sign);
+double convert_to_digits(std::string string_num, double previous_answer_memory, bool& success);
 void help();
 void update_log();
 void history_log(History_Log& memory_log);
