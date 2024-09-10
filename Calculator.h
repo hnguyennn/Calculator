@@ -14,12 +14,13 @@ private:
     };
     Node *_head, *_tail, *_prev_to_current;
     size_t _size;
+    bool exit;
 public:
     History_Log();
     ~History_Log();
     History_Log *insert_into_memory(std::string expression);
     size_t get_size();
-    void clear();
+    void clear(size_t start, size_t end, bool& exit);
     std::string print_memory();
     double get_previous_answer_memory();
 };
@@ -32,7 +33,7 @@ double convert_to_digits(std::string string_num, double previous_answer_memory, 
 void help();
 void update_log();
 void history_log(History_Log& memory_log);
-void program(History_Log& memory_log);
+void program(History_Log& memory_log, bool& exit);
 
 
 
