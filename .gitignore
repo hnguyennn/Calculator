@@ -2,3 +2,4 @@
 *.dSYM/
 Calculator
 .DS_Store
+calculator_env/ 
