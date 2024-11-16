@@ -9,19 +9,20 @@
 
 
 
-double calculate(std::string string_input, History_Log& memory_log){
+double calculate(std::string expression){
     // todo: testing, fix logic to include 'ans', fix error where if only 1 num, num1 = 0
-    double num1 = 0.0, num2 = 0.0, result = 0.0, previous_answer_memory = memory_log.get_previous_answer_memory();
-    std::string sign = "+", test = "", stringNum;
+    // rework previous answer memory, temporarily disabled
+    double num1 = 0.0, num2 = 0.0, result = 0.0;
+    std::string expression, sign = "+", test = "", stringNum;
     bool success = true;
     stringstream stream;
 
-    stream << string_input;
+    stream << expression;
 
     // Check the first number if its a digit or 'Ans'
     stream >> stringNum;
     //cout << "First attempt to saving number: " <<  stringNum << "\n\n";
-    num1 = convert_to_digits(stringNum, previous_answer_memory, success);
+    num1 = convert_to_digits(stringNum, success); //todo: redo previous answer memory
     if (success == false){ // Not a valid number
         std::cout << "Error: Invalid input, check 'Help' for the proper format.\n\n";
         return 0.0; //find a way to cancel
@@ -30,7 +31,7 @@ double calculate(std::string string_input, History_Log& memory_log){
 
     while (stream >> sign){
         stream >> stringNum; // Check if next input is a number
-        num2 = convert_to_digits(stringNum, previous_answer_memory, success);
+        num2 = convert_to_digits(stringNum, success); //todo: redo previous answer memory
         //cout << "\nnum2 is " << num2 << "\n\n";
         if (success == false){
             std::cout << "Error: Invalid input, check 'Help' for the proper format.\n\n";
@@ -79,8 +80,9 @@ double calculate_expression(double num1, double num2, std::string sign){
     }
 }
 
-double convert_to_digits(std::string string_num, double previous_answer_memory, bool& success){
+double convert_to_digits(std::string string_num, bool& success){
 // Check if it is digits or 'ans' and if it is, return appropriate value. if not, assign success = false and return.
+// redo previous answer memory
     if (!((all_of(string_num.begin(), string_num.end(), ::isdigit)) || string_num == "Ans" || string_num == "ans")){
         success = false;
         return 0.0;
@@ -90,19 +92,19 @@ double convert_to_digits(std::string string_num, double previous_answer_memory, 
             success = true;
             return std::stod(string_num);
         }
-        else if (string_num == "Ans" || string_num == "ans"){ //stringNum is trying to access previous answer memory
-            success = true;
-            return previous_answer_memory;
-        }
+        //else if (string_num == "Ans" || string_num == "ans"){ //stringNum is trying to access previous answer memory
+            //success = true;
+            //return previous_answer_memory;
+        //}
     }
 }
-void help(){
-    std::string user_input;
-    std::cout << "What would you like help on?\n" << "C - Calculator\nU - Update Log\nL - History Log\n";
-    std::getline(std::cin, user_input);
+std::string help(std::string input){
+    std::string output;
+    std::stringstream stream;
+    //std::cout << "What would you like help on?\n" << "C - Calculator\nU - Update Log\nL - History Log\n";
 
-    if (user_input == "C" || user_input == "c"){
-        std::cout << "----------------\n\n"
+    if (input == "C"){
+        stream << "----------------\n\n"
         << "A simple program that can only perform basic arithmetic\n\n"
         << "How to use:\n"
         << "Enter input in the following format: (num1) (operation sign) (num2)\n"
@@ -112,17 +114,15 @@ void help(){
         << "Limitations:\n-> Can only perform simple functions (addition, subtraction, multiplication, division)\n"
         << "-> Expression is evaluated from left to right.\n"
         << "-> Does not support parentheses or PEMDAS\n\n"
-        << "----------------\n\n"
-        << "Returning to homescreen now.\n\n";
+        << "----------------\n\n";
     }
-    else if (user_input == "U" || user_input == "u"){
-        std::cout << "----------------\n\n"
+    else if (input == "U"){
+        stream << "----------------\n\n"
         << "A log with version updates if any. Will add new features or fix old bugs.\n\n"
-        << "----------------\n\n"
-        << "Returning to homescreen now.\n\n";
+        << "----------------\n\n";
     }
-    else if (user_input == "L" || user_input == "l"){
-        std::cout << "----------------\n\n"
+    else if (input == "L"){
+        stream << "----------------\n\n"
         <<"A history of all previous calculations."
         << "This will print out all previous calculations oldest to newest. "
         << "There will also be an option to clear the history.\n\n"
@@ -137,17 +137,18 @@ void help(){
         << "The start and end positions must be valid indexes (ex: end cannot be greater than start and both cannot be out of bounds).\n"
         << "Ex: If you currently have 15 entries and would like to remove entries 2 to 6 inclusive, when prompted by the program, enter: '2 - 6'. "
         << "The format must match exactly in order for the program to correctly read it.\n\n"
-        << "----------------\n\n"
-        << "Returning to homescreen now.\n\n";
+        << "----------------\n\n";
     }
-    else {
-        std::cout << "Invalid input, going back to homescreen.\n\n";
-    }
+    output = stream.str();
 
+    return output;
 }
 
-void update_log(){
-    std::cout << "----------------\n\n"
+std::string update_log(){
+    //todo: needs testing
+    std::stringstream stream;
+
+    stream << "----------------\n\n"
     << "Update Log\n"
     << "~~~~~~~~~~~\n\n"
     << "9/2/2024\n"
@@ -171,15 +172,15 @@ void update_log(){
     << "would show up as '25 = 0' in the history log.\n"
     << "-----\n"
     << "\nMore detailed updates can be found on https://github.com/hnguyennn/Calculator \n"
-    << "----------------\n\n"
-    << "Press Enter to return to homescreen.\n\n";
-
-    std::string temp;
-    std::getline(std::cin, temp);
+    << "----------------\n\n";
+    
+    std::string updates = stream.str();
+    return updates;
 }
 
 void history_log(History_Log& memory_log, bool& exit){
     // todo: move to another file.
+    // rework
     std::string user_input="A", view_memory_string = "", user_input_clear;
 
     while ((user_input != "b") && (user_input != "B")){
@@ -282,65 +283,39 @@ void history_log(History_Log& memory_log, bool& exit){
         }
     }
 }
-void program(History_Log& memory_log, bool& exit){
-    std::string user_input="A", expression_input, expression_string, result_string;
-    double result=0;
-    size_t memory_size = 0;
+int main(int argc, char *argv[]) {
+    // argv = [choice (string), expression_input (string)]
+    std::string expression_input = argv[2], expression_string, result_string, choice = argv[1]; // fix unused variables
+    
 
-    while (user_input != "Q" && user_input != "q"){
-        std::cout << "What would you like to do next?\n";
-        std::cout << "C - Calculate \nH - Help\nL - History log\nU - Update Log\nQ - Quit\n\n";
-        std::getline(std::cin, user_input);
-
-        if (user_input == "C" || user_input == "c"){
+        if (choice == "C"){
             // todo: get the most recent answer
-            //       fix error with the history log saving incorrect inputs
-            if (memory_log.get_size() < 20){
-                std::cout << "Please enter a valid expression: ";
-                std::getline(std::cin, expression_input);
-                result = calculate(expression_input, memory_log);
-                result_string = to_string(result);
-                expression_string = expression_input + " = " + result_string;
-
-                // Fix error with saving incorrect inputs
-                std::cout << expression_input << " = " << result << "\n\n"
-                << "Attempting to save to memory...\n";
-                memory_log.insert_into_memory(expression_string);
-                std::cout << "Saved to memory successfully! Returning to homescreen now.\n\n"; 
-            }
-            else if (memory_log.get_size() == 20){
-                std::cout << "Warning: Maximum capacity reached. Head to 'History Log' to manage storage.\n\n";
-            }
+            //       - fix error with the history log saving incorrect inputs
+            //       - save to memory rework
+            calculate(expression_input);
         }
 
-        else if (user_input == "H" || user_input =="h"){
-            help();
+        else if (choice == "H"){
+            // todo:needs testing
+            help(expression_input);
         }
 
-        else if (user_input == "L" || user_input == "l"){
-            history_log(memory_log, exit);
+        else if (choice == "L"){
+        // todo: rework so it appends results to a txt file instead
+        // temporarily disabled
+            //history_log();
         }
 
-        else if (user_input == "U" || user_input == "u"){
-            update_log();
+        else if (choice == "U"){
+            // todo: needs testing
+            std::cout << update_log();
         }
 
-        else if (user_input == "Q" || user_input == "q"){
+        else if (choice == "Q"){
+            // todo: needs testing
             std::cout << "Ok, see you next time!\n\n";
-            exit = true;
-            return;
         }
-
-        else {
-            std::cout << "Invalid input, try again.\n\n";
-        }
-    }
-}
-
-int main(){
-    // run the program and create linked list for the history log
-    History_Log memory_history;
-    bool exit = false;
-    program(memory_history, exit);
     return 0;
-}
+    }
+
+
