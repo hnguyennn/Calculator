@@ -1,0 +1,28 @@
+h1 {
+    text-align: center;
+    margin: 80px auto;
+    font-family: 'Roboto', sans-serif;   /* Apply the Roboto font */
+    font-size: 36px;
+    color: #333;
+}
+
+.big-button {
+    display: block;
+    width: 400px;
+    height: 80px;
+    margin: 30px auto;
+    font-family: 'Roboto', sans-serif;   /* Apply the Roboto font to the buttons */
+    font-size: 20px;
+    background-color: #d9d99e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    line-height: 60px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.big-button:hover {
+    background-color: #a99c6e;
+}
