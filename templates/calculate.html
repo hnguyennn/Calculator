@@ -13,7 +13,11 @@
         }
     </style>
     <h1>Calculate</h1>
-    <button class="small-button">back</button>
+
+    <a href="{{ url_for('home') }}">
+        <button class="small-button">back</button>
+    </a>
+    
     <!-- Input box for user input -->
     <input type="text" id="userInput" placeholder="Enter an expression">
 

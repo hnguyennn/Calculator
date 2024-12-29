@@ -5,6 +5,13 @@ h1 {
     font-size: 36px;
     color: #333;
 }
+h2 {
+    text-align: center;
+    margin: 10px auto;
+    font-family: 'Roboto', sans-serif;   /* Apply the Roboto font */
+    font-size: 30px;
+    color: #333;
+}
 
 .big-button {
     display: block;
@@ -22,7 +29,30 @@ h1 {
     cursor: pointer;
     font-weight: bold;
 }
+.small-button{
+    display: block;
+    width: 200px;
+    height: 60px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 10px;
+    font-family: 'Roboto', sans-serif;   /* Apply the Roboto font to the buttons */
+    font-size: 20px;
+    background-color: #d9d99e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    line-height: 60px;
+    cursor: pointer;
+    font-weight: bold;
+}
 
-.big-button:hover {
+.big-button:hover, .small-button:hover {
     background-color: #a99c6e;
+}
+
+a {
+    text-decoration: none;  /* Removes the underline */
 }

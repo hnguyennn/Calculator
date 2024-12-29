@@ -13,9 +13,17 @@
         }
     </style>
     <h1>Calculator</h1>
-    <button class="big-button">Calculate</button>
-    <button class="big-button">Help</button>
-    <button class="big-button">Update Log</button>
-    <button class="big-button">History Log</button>
+    <a href="{{ url_for('calculate') }}">
+        <button class="big-button">Calculate</button>
+    </a>
+    <a href="{{ url_for('help') }}">
+        <button class="big-button">Help</button>
+    </a>
+    <a href="{{ url_for('update_log') }}">
+        <button class="big-button">Update Log</button>
+    </a>
+    <a href="{{ url_for('history_log') }}">
+        <button class="big-button">History Log</button>
+    </a>
 </body>
 </html>
